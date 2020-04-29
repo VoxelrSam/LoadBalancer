@@ -1,0 +1,26 @@
+{
+  "noBalancing": {
+    "total": 25078,
+    "average": 11426.41
+  },
+  "sequential": {
+    "total": 14114,
+    "average": 2530.78
+  },
+  "random": {
+    "total": 16839,
+    "average": 2816.24
+  },
+  "smallestQueue": {
+    "total": 8512,
+    "average": 1410.04
+  },
+  "dynamic": {
+    "total": 25609,
+    "average": 5530.62
+  },
+  "dynamicImmediate": {
+    "total": 4759,
+    "average": 1147.65
+  }
+}
