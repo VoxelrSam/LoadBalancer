@@ -13,15 +13,20 @@ class Balancer {
     this.currentServer = 0;
   }
 
+  /**
+   * Initialize the server for the load balancer and begin listening for connections
+   */
   boot () {
     const app = express();
 
     app.use(express.json());
 
+    // Set a catch all handler
     app.get('*', (req, res) => {
       handler(req, res, this);
     });
 
+    // Create a route for load stats to be sent to from servers
     app.post('/stats', (req, res) => {
       let server;
       for (server in this.serverList) {
@@ -51,10 +56,18 @@ class Balancer {
     this.server.on('listening', onListening);
   }
 
+  /**
+   * Kills the load balancer
+   */
   stop () {
     this.server.close();
   }
 
+  /**
+   * Use the balancer's algorithm to determine which server to send the next request to
+   *
+   * @returns index number for the chosen server in this.serverList
+   */
   getServerIndex () {
     let server;
 
@@ -73,6 +86,7 @@ class Balancer {
         break;
 
       case "smallestQueue":
+        // Get the index of the server with the least connections
         server = this.serverLoad.indexOf(Math.min(...this.serverLoad));
 
         this.serverLoad[server]++;
@@ -82,6 +96,7 @@ class Balancer {
       case "dynamic":
       case "dynamicImmediate":
       case "dynamicHybrid":
+        // Get the index of the server with the least load
         for (let index in this.serverLoad) {
           if (!server || this.serverLoad[server] > this.serverLoad[index]) {
             server = index;

@@ -4,6 +4,7 @@ import fs from 'fs';
 
 import axios from 'axios';
 
+// basic sleep function used to wait
 function sleep(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
@@ -16,6 +17,7 @@ class Metrics {
     this.metrics = {};
   }
 
+  // Initialize the balancer and servers for the next test
   setup (type) {
     console.log("\n=== Beginning metrics gathering for '" + type + "' ===\n");
 
@@ -32,6 +34,7 @@ class Metrics {
     this.balancer.boot();
   }
 
+  // Kill all the servers to avoid port use problems
   teardown () {
     for (let server in this.balancer.serverList) {
       this.balancer.serverList[server].stop();
@@ -40,6 +43,7 @@ class Metrics {
     this.balancer.stop();
   }
 
+  // Record the stats from the recent test into this.metrics
   recordStats (type, stats) {
     this.metrics[type] = {
       total: stats[0],
@@ -47,21 +51,33 @@ class Metrics {
     };
   }
 
+  /**
+   * Sends a specified number of requests to the balancer and waits for the responses
+   *
+   * @param quantity the number of requests to send
+   * @returns {Promise<any | never>} promise to await on
+   */
   async sendRequests (quantity) {
     let received = 0;
     const start = new Date().getTime();
     const times = [];
 
+    // Begin asynchronous sending of requests
     return new Promise(async function(done) {
       for (let i = 0; i < quantity; i++) {
+        // push a new time to record the start of this request
         times.push(new Date().getTime());
 
+        // Send a new request to the balancer
         axios.get("http://localhost:3000/users")
-          .then(res => {
+          .then(res => {  // After getting a response
+            // Record the response time
             times[i] = (new Date().getTime()) - times[i];
             received++;
 
+            // If we received the last request
             if (received === quantity) {
+              // Record test end time
               const end = new Date().getTime();
 
               // compute average request time
@@ -74,10 +90,13 @@ class Metrics {
               average = average / quantity;
 
               console.log("\n--- " + quantity + " requests completed in " + total + " milliseconds with an average time of " + average + " milliseconds ---\n");
+
+              // resolve the promise and pass values onto the then section
               done([total, average]);
             }
           });
 
+        // wait 25 milliseconds between request
         await sleep(25);
       }
     }).then((stats) => {
@@ -86,6 +105,12 @@ class Metrics {
     });
   }
 
+  /**
+   * Execute all of the different tests
+   *
+   * @param quantity the number of messages to send
+   * @returns {Promise<void>}
+   */
   async all (quantity) {
     await this.noBalancing(quantity);
     await this.sequential(quantity);
@@ -95,6 +120,7 @@ class Metrics {
     await this.dynamicImmediate(quantity);
     await this.dynamicHybrid(quantity);
 
+    // Write the final metrics to a file
     fs.writeFile('metrics.json', JSON.stringify(this.metrics, null, 2), 'utf8', () => {
       console.log("Metrics written to metrics.json");
     });

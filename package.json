@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "start": "nodemon --exec babel-node ./bin/driver.js",
-    "test": "mocha --require @babel/register --exit",
     "metrics": "nodemon --ignore metrics.json --exec babel-node ./metrics/driver.js"
   },
   "dependencies": {
@@ -14,12 +13,10 @@
     "@babel/preset-env": "^7.9.5",
     "@babel/register": "^7.9.0",
     "axios": "^0.19.2",
-    "chai": "^4.2.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "esm": "^3.2.25",
     "express": "~4.16.1",
-    "mocha": "^7.1.2",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.3"
   }

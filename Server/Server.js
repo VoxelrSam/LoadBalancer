@@ -16,17 +16,23 @@ class Server {
       this.delay = 0;
   }
 
+  /**
+   * Initialize the server and begin listening for connections
+   */
   boot () {
     const app = express();
 
     app.use(express.json());
 
+    // Set up test route that uses the delay value specified in this server's constructor
     app.get('/users', (req, res) => {
       users(req, res, this);
     });
 
+    // Serve all static files under ../public/
     app.use(express.static("public"));
 
+    // Create a 404 handler
     app.use(function(req, res, next) {
       res.status(404);
       return res.send("404: Not found");
@@ -49,6 +55,9 @@ class Server {
     this.server.on('listening', onListening);
   }
 
+  /**
+   * Kill the server
+   */
   stop () {
     this.server.close();
   }
