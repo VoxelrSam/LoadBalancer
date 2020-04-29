@@ -86,53 +86,60 @@ class Metrics {
     });
   }
 
-  async all () {
-    await this.noBalancing();
-    await this.sequential();
-    await this.random();
-    await this.smallestQueue();
-    await this.dynamic();
-    await this.dynamicImmediate();
+  async all (quantity) {
+    await this.noBalancing(quantity);
+    await this.sequential(quantity);
+    await this.random(quantity);
+    await this.smallestQueue(quantity);
+    await this.dynamic(quantity);
+    await this.dynamicImmediate(quantity);
+    await this.dynamicHybrid(quantity);
 
     fs.writeFile('metrics.json', JSON.stringify(this.metrics, null, 2), 'utf8', () => {
       console.log("Metrics written to metrics.json");
     });
   }
 
-  async noBalancing () {
+  async noBalancing (quantity) {
     this.setup('noBalancing');
 
-    this.recordStats('noBalancing', await this.sendRequests(100));
+    this.recordStats('noBalancing', await this.sendRequests(quantity));
   }
 
-  async sequential () {
+  async sequential (quantity) {
     this.setup('sequential');
 
-    this.recordStats('sequential', await this.sendRequests(100));
+    this.recordStats('sequential', await this.sendRequests(quantity));
   }
 
-  async random () {
+  async random (quantity) {
     this.setup('random');
 
-    this.recordStats('random', await this.sendRequests(100));
+    this.recordStats('random', await this.sendRequests(quantity));
   }
 
-  async smallestQueue () {
+  async smallestQueue (quantity) {
     this.setup('smallestQueue');
 
-    this.recordStats('smallestQueue', await this.sendRequests(100));
+    this.recordStats('smallestQueue', await this.sendRequests(quantity));
   }
 
-  async dynamic () {
+  async dynamic (quantity) {
     this.setup('dynamic');
 
-    this.recordStats('dynamic', await this.sendRequests(100));
+    this.recordStats('dynamic', await this.sendRequests(quantity));
   }
 
-  async dynamicImmediate () {
+  async dynamicImmediate (quantity) {
     this.setup('dynamicImmediate');
 
-    this.recordStats('dynamicImmediate', await this.sendRequests(100));
+    this.recordStats('dynamicImmediate', await this.sendRequests(quantity));
+  }
+
+  async dynamicHybrid (quantity) {
+    this.setup('dynamicHybrid');
+
+    this.recordStats('dynamicHybrid', await this.sendRequests(quantity));
   }
 }
 

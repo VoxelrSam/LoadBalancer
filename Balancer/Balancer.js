@@ -81,6 +81,7 @@ class Balancer {
 
       case "dynamic":
       case "dynamicImmediate":
+      case "dynamicHybrid":
         for (let index in this.serverLoad) {
           if (!server || this.serverLoad[server] > this.serverLoad[index]) {
             server = index;

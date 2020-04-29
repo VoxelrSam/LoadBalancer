@@ -25,6 +25,13 @@ class Server {
       users(req, res, this);
     });
 
+    app.use(express.static("public"));
+
+    app.use(function(req, res, next) {
+      res.status(404);
+      return res.send("404: Not found");
+    });
+
     const port = this.port;
     app.set('port', port);
 

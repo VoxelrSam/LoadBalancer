@@ -1,9 +1,14 @@
 import Balancer from '../Balancer/Balancer';
 import Server from '../Server/Server';
 
-const serverList = [new Server(3001, 100)];
-serverList[0].boot();
+const serverList = [];
+const delayList = [250, 500, 100, 200, 700];
 
-const balancer = new Balancer(3000, serverList);
+for (let i = 0; i < 5; i++) {
+  const server = new Server(3001 + i, delayList[i]);
+  serverList.push(server);
+  server.boot();
+}
 
+const balancer = new Balancer(3000, serverList, "dynamicHybrid");
 balancer.boot();
