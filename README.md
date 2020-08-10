@@ -1,6 +1,8 @@
 # LoadBalancer
 A simple load balancer for CS422
 
+Take a look at my final writeup [here](https://github.com/VoxelrSam/LoadBalancer/blob/master/Project%20Report.pdf) or the initial proposal [here](https://github.com/VoxelrSam/LoadBalancer/blob/master/Project%20Proposal.pdf)
+
 ### Setup
 This project uses [Nodejs](https://nodejs.org/en/). Be sure to install it before proceeding.
 
